@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 //using HapticPlugin;
 
@@ -139,6 +141,7 @@ public class HapticGrabber : MonoBehaviour
 			GetComponentInParent<Rigidbody>().angularVelocity = Vector3.zero;
 
 		}
+
 	}
 
 	void OnCollisionEnter(Collision collisionInfo)
@@ -170,15 +173,24 @@ public class HapticGrabber : MonoBehaviour
 
 		if (thatBody.isKinematic)
 			return;
-	
+
+		if ( that.name == "Floor" )
+			Debug.Log("Game start");
+
+		if ( that.name == "Deathblock" )
+			Debug.Log("Game loss by death block collision")
+
 		touching = that;
 	}
+
 	void OnCollisionExit(Collision collisionInfo)
 	{
 		Collider other = collisionInfo.collider;
+		GameObject that = other.gameObject;
+
 		//Debug.unityLogger.Log("onCollisionrExit : " + other.name);
 
-		if( collisionInfo.rigidbody != null )
+		if ( collisionInfo.rigidbody != null )
 			hapticTouchEvent( false );
 
 		if (touching == null)
@@ -192,6 +204,9 @@ public class HapticGrabber : MonoBehaviour
 		{
 			touching = null;
 		}
+
+		if (that.name == "Floor")
+			Debug.Log("Game loss");
 	}
 		
 	//! Begin grabbing an object. (Like closing a claw.) Normally called when the button is pressed. 
